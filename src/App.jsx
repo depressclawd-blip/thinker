@@ -47,7 +47,7 @@ function App() {
         <section id="about" className="section">
           <h2>About</h2>
           <p className="section-text">
-            $THINK is the community meme token for thinkers. No utility, no
+            $THINKER is the community meme token for thinkers. No utility, no
             roadmap—just vibes and the belief that the best ideas start with a
             thought.
           </p>
