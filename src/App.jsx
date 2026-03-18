@@ -20,11 +20,13 @@ function App() {
       <Navbar />
       <main>
         <section id="home" className="hero-section">
-          <img
-            src="/thinkerbanner.jpg"
-            alt="THINKER"
-            className="hero-banner"
-          />
+          <div className="hero-banner-wrap">
+            <img
+              src="/thinkerbanner.jpg"
+              alt="THINKER"
+              className="hero-banner"
+            />
+          </div>
           <p className="hero-tagline">
             The meme token for people who think different.
           </p>
@@ -58,10 +60,18 @@ function App() {
 
         <section className="section gallery-section">
           <div className="gallery-grid">
-            <img src="/singa.jpg" alt="Singa" className="gallery-img" />
-            <img src="/macan.jpg" alt="Macan" className="gallery-img" />
-            <img src="/pinguin.jpg" alt="Pinguin" className="gallery-img" />
-            <img src="/thinkerpfp.jpg" alt="THINKER" className="gallery-img" />
+            <div className="gallery-cell">
+              <img src="/singa.jpg" alt="Singa" className="gallery-img" />
+            </div>
+            <div className="gallery-cell">
+              <img src="/macan.jpg" alt="Macan" className="gallery-img" />
+            </div>
+            <div className="gallery-cell">
+              <img src="/pinguin.jpg" alt="Pinguin" className="gallery-img" />
+            </div>
+            <div className="gallery-cell">
+              <img src="/thinkerpfp.jpg" alt="THINKER" className="gallery-img" />
+            </div>
           </div>
         </section>
       </main>
