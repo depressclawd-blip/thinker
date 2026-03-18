@@ -11,14 +11,33 @@
   box-sizing: border-box;
 }
 
-.hero-banner {
+.hero-banner-wrap {
   width: 100%;
   max-width: 900px;
-  height: auto;
-  border-radius: 16px;
   margin-bottom: 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.hero-banner-wrap:hover {
+  border-color: var(--accent-border);
+  box-shadow: 0 16px 48px rgba(168, 85, 247, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.15);
+}
+
+.hero-banner {
+  width: 100%;
+  height: auto;
   display: block;
   object-fit: cover;
+  transition: transform 0.45s ease, filter 0.35s ease;
+}
+
+.hero-banner-wrap:hover .hero-banner {
+  transform: scale(1.05);
+  filter: brightness(1.08) saturate(1.05);
 }
 
 .hero-tagline {
@@ -88,6 +107,12 @@
   width: 32px;
   height: 32px;
   object-fit: contain;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.hero-links a:hover .hero-link-logo {
+  transform: scale(1.15) rotate(-3deg);
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(168, 85, 247, 0.5));
 }
 
 /* Buttons */
@@ -145,12 +170,30 @@
   margin-top: 1rem;
 }
 
+.gallery-cell {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.gallery-cell:hover {
+  border-color: var(--accent-border);
+  box-shadow: 0 12px 32px rgba(168, 85, 247, 0.18);
+  transform: translateY(-4px);
+}
+
 .gallery-img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 16px;
-  border: 1px solid var(--border);
+  display: block;
+  transition: transform 0.45s ease, filter 0.35s ease;
+}
+
+.gallery-cell:hover .gallery-img {
+  transform: scale(1.08);
+  filter: brightness(1.06) contrast(1.03);
 }
 
 @media (min-width: 640px) {
@@ -178,4 +221,24 @@
 
 .footer p {
   margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner-wrap,
+  .hero-banner,
+  .gallery-cell,
+  .gallery-img,
+  .hero-link-logo {
+    transition: none;
+  }
+
+  .hero-banner-wrap:hover .hero-banner,
+  .gallery-cell:hover .gallery-img,
+  .hero-links a:hover .hero-link-logo {
+    transform: none;
+  }
+
+  .gallery-cell:hover {
+    transform: none;
+  }
 }
