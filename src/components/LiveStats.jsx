@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './LiveStats.css'
 
 const DEXSCREENER_PAIR_URL =
-  'https://api.dexscreener.com/latest/dex/pairs/solana/7f87qx3ieqmavai3e2mksimczxze1p2uj31fe1gkpump'
+  'https://api.dexscreener.com/latest/dex/pairs/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F'
 const REFRESH_MS = 60_000
 
 function formatUsd(value) {
