@@ -39,7 +39,7 @@ function App() {
             <a href="https://pump.fun/coin/7F87Qx3iEQmAVAi3E2mkSiMCZXzE1P2uJ31fe1Gkpump" target="_blank" rel="noopener noreferrer" aria-label="Pump.fun">
               <img src="/pflogo.png" alt="Pump.fun" className="hero-link-logo" width="32" height="32" />
             </a>
-            <a href="https://dexscreener.com/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F" target="_blank" rel="noopener noreferrer" aria-label="DexScreener">
+            <a href="https://dexscreener.com/solana/7f87qx3ieqmavai3e2mksimczxze1p2uj31fe1gkpump" target="_blank" rel="noopener noreferrer" aria-label="DexScreener">
               <img src="/dxlogo.png" alt="DexScreener" className="hero-link-logo" width="32" height="32" />
             </a>
           </div>
