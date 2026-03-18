@@ -1,9 +1,21 @@
 import { useState, useEffect } from 'react'
 import './LiveStats.css'
 
-const DEXSCREENER_PAIR_URL =
-  'https://api.dexscreener.com/latest/dex/pairs/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F'
-const REFRESH_MS = 60_000
+/** Token CA — setelah migrate, stats ambil dari pool likuiditas terbesar (mis. PumpSwap). */
+const TOKEN_CA = '7F87Qx3iEQmAVAi3E2mkSiMCZXzE1P2uJ31fe1Gkpump'
+const DEXSCREENER_TOKEN_PAIRS_URL = `https://api.dexscreener.com/token-pairs/v1/solana/${TOKEN_CA}`
+/** Halaman token DexScreener (bukan pair bonding lama). */
+const DEXSCREENER_PAGE = `https://dexscreener.com/solana/${TOKEN_CA.toLowerCase()}`
+const REFRESH_MS = 15_000
+
+function pickMainPair(pairs) {
+  if (!Array.isArray(pairs) || pairs.length === 0) return null
+  return pairs.reduce((best, p) => {
+    const liq = p.liquidity?.usd ?? 0
+    const bestLiq = best.liquidity?.usd ?? 0
+    return liq > bestLiq ? p : best
+  })
+}
 
 function formatUsd(value) {
   if (value == null || Number.isNaN(value)) return '—'
@@ -11,7 +23,16 @@ function formatUsd(value) {
   if (value >= 1_000) return `$${(value / 1_000).toFixed(2)}K`
   if (value >= 1) return `$${value.toFixed(2)}`
   if (value >= 0.0001) return `$${value.toFixed(6)}`
-  return `$${value.toExponential(2)}`
+  if (value > 0) return `$${value.toFixed(8)}`
+  return '—'
+}
+
+function formatTime(d) {
+  return d.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
 }
 
 function formatPercent(value) {
@@ -25,16 +46,22 @@ export default function LiveStats() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
   async function fetchStats() {
     try {
       setError(null)
-      const res = await fetch(DEXSCREENER_PAIR_URL)
+      const res = await fetch(DEXSCREENER_TOKEN_PAIRS_URL, {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      })
       if (!res.ok) throw new Error('Failed to fetch')
-      const json = await res.json()
-      const pair = json.pair ?? json.pairs?.[0]
-      if (pair) setData(pair)
-      else setError('No pair data')
+      const pairs = await res.json()
+      const pair = pickMainPair(pairs)
+      if (pair) {
+        setData(pair)
+        setLastUpdated(new Date())
+      } else setError('No pair data')
     } catch (e) {
       setError(e.message)
     } finally {
@@ -45,7 +72,12 @@ export default function LiveStats() {
   useEffect(() => {
     fetchStats()
     const interval = setInterval(fetchStats, REFRESH_MS)
-    return () => clearInterval(interval)
+    const onFocus = () => fetchStats()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('focus', onFocus)
+    }
   }, [])
 
   if (loading && !data) {
@@ -78,6 +110,11 @@ export default function LiveStats() {
   return (
     <section className="live-stats" aria-label="Live token stats">
       <h2 className="live-stats-title">Live stats</h2>
+      {lastUpdated ? (
+        <p className="live-stats-updated">
+          Updated {formatTime(lastUpdated)} · refresh every 15s
+        </p>
+      ) : null}
       <div className="live-stats-grid">
         <div className="live-stat">
           <span className="live-stat-label">Price</span>
@@ -105,12 +142,12 @@ export default function LiveStats() {
         <iframe
           title="THINKER price chart on DexScreener"
           className="live-stats-chart"
-          src="https://dexscreener.com/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F?embed=1&chartTheme=dark&chartType=usd&interval=15"
+          src={`${DEXSCREENER_PAGE}?embed=1&chartTheme=dark&chartType=usd&interval=15`}
         />
         <p className="live-stats-chart-fallback">
           Chart not loading?{' '}
           <a
-            href="https://dexscreener.com/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F"
+            href={DEXSCREENER_PAGE}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -119,7 +156,7 @@ export default function LiveStats() {
         </p>
       </div>
       <a
-        href="https://dexscreener.com/solana/E1W6HgPtbi71vYsSYcigk9j5xmBX9FBQThyCyWUP1f2F"
+        href={DEXSCREENER_PAGE}
         target="_blank"
         rel="noopener noreferrer"
         className="live-stats-link"
