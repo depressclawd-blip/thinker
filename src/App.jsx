@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Navbar from './components/Navbar'
+import LiveStats from './components/LiveStats'
 import './App.css'
 
 const CA = '7F87Qx3iEQmAVAi3E2mkSiMCZXzE1P2uJ31fe1Gkpump'
@@ -43,6 +44,8 @@ function App() {
             </a>
           </div>
         </section>
+
+        <LiveStats />
 
         <section id="about" className="section">
           <h2>About</h2>
